@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{74C985E7-82E6-4B37-8B0A-630F84945F46}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Pipelines</RootNamespace>
+    <AssemblyName>Pipelines</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="JetBrains.Annotations">
+      <HintPath>..\packages\JetBrains.Annotations.7.0\lib\net45\JetBrains.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ActivatorStepFactory.cs" />
+    <Compile Include="Activity.cs" />
+    <Compile Include="CodeBasedTypeResolver.cs" />
+    <Compile Include="DataContainer.cs" />
+    <Compile Include="DictionaryStepPropertyValueProvider.cs" />
+    <Compile Include="ActivityState.cs" />
+    <Compile Include="CompositeEventSink.cs" />
+    <Compile Include="DynamicEventSink.cs" />
+    <Compile Include="IEventSink.cs" />
+    <Compile Include="IInputTransformer.cs" />
+    <Compile Include="IPipelineHost.cs" />
+    <Compile Include="IPipelineRepository.cs" />
+    <Compile Include="IPipelineTypeResolver.cs" />
+    <Compile Include="Events\PipelineCreatedEvent.cs" />
+    <Compile Include="IStepPropertyValueProvider.cs" />
+    <Compile Include="IStepFactory.cs" />
+    <Compile Include="IUnitOfWork.cs" />
+    <Compile Include="PipelineData.cs" />
+    <Compile Include="PipelineFactory.cs" />
+    <Compile Include="PipelineHost.cs" />
+    <Compile Include="Events\StageFinishedEvent.cs" />
+    <Compile Include="PipelineSubject.cs" />
+    <Compile Include="Schema\Builders\ActivityBuilder.cs" />
+    <Compile Include="Schema\Builders\IActivityBuilder.cs" />
+    <Compile Include="Schema\Builders\IPipelineBuilder.cs" />
+    <Compile Include="Schema\Builders\IStageBuilder.cs" />
+    <Compile Include="Schema\Builders\IStepBuilder.cs" />
+    <Compile Include="Schema\Builders\PipelineBuilder.cs" />
+    <Compile Include="Schema\Builders\StageBuilder.cs" />
+    <Compile Include="Schema\Builders\StepBuilder.cs" />
+    <Compile Include="Schema\StepParameter.cs" />
+    <Compile Include="StepSchemaValueProvider.cs" />
+    <Compile Include="UniquePipelineId.cs" />
+    <Compile Include="UnitOfWork.cs" />
+    <Compile Include="Schema\ActivitySchema.cs" />
+    <Compile Include="Schema\PipelineSchema.cs" />
+    <Compile Include="Schema\StageSchema.cs" />
+    <Compile Include="Schema\StepSchema.cs" />
+    <Compile Include="StageState.cs" />
+    <Compile Include="BaseStep.cs" />
+    <Compile Include="Pipeline.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stage.cs" />
+    <Compile Include="StageTriggerMode.cs" />
+    <Compile Include="Events\StepExecutedEvent.cs" />
+    <Compile Include="Step.cs" />
+    <Compile Include="StepExecutionResult.cs" />
+    <Compile Include="UniqueActivityId.cs" />
+    <Compile Include="UniqueStageId.cs" />
+    <Compile Include="UniqueStepId.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

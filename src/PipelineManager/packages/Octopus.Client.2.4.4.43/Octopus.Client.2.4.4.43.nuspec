@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Octopus.Client</id>
+    <version>2.4.4.43</version>
+    <title>Octopus.Client</title>
+    <authors>Octopus Deploy</authors>
+    <owners>Octopus Deploy</owners>
+    <licenseUrl>http://octopusdeploy.com/pricing</licenseUrl>
+    <projectUrl>http://octopusdeploy.com/</projectUrl>
+    <iconUrl>http://i.octopusdeploy.com/resources/Avatar3-32x32.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Octopus Deploy is a user-friendly automated deployment tool for .NET developers. 
+    
+This package contains the client library for the HTTP API in Octopus.</description>
+    <summary>Client library for the Octopus Deploy HTTP API.</summary>
+    <releaseNotes />
+    <language>en-US</language>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" />
+      <dependency id="Sprache" />
+    </dependencies>
+  </metadata>
+</package>
