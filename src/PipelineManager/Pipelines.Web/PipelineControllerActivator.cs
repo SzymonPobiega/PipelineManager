@@ -19,4 +19,5 @@ namespace Pipelines.Web
             return (IHttpController) Activator.CreateInstance(controllerType, new object[] {_pipelineHost});
         }
     }
+
 }
