@@ -60,6 +60,17 @@ namespace Pipelines
             get { return _schemaName; }
         }
 
+        [NotNull]
+        public UniqueActivityId UniqueActivityId
+        {
+            get {  return new UniqueActivityId(_activityId,_stageId,_pipelineId,_schemaName);}
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}/{1}/{2}/{3}/{4}", _schemaName, _pipelineId, _stageId, _activityId, _stepId);
+        }
+
         protected bool Equals(UniqueStepId other)
         {
             return string.Equals(_stepId, other._stepId) && string.Equals(_activityId, other._activityId) && string.Equals(_stageId, other._stageId) && string.Equals(_pipelineId, other._pipelineId) && string.Equals(_schemaName, other._schemaName);

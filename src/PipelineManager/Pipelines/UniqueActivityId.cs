@@ -56,6 +56,11 @@ namespace Pipelines
             return new UniqueStepId(localId, _activityId, _stageId, _pipelineId, _schemaName);
         }
 
+        public override string ToString()
+        {
+            return string.Format("{0}/{1}/{2}/{3}", _schemaName, _pipelineId, _stageId, _activityId);
+        }
+
         protected bool Equals(UniqueActivityId other)
         {
             return string.Equals(_activityId, other._activityId) && string.Equals(_stageId, other._stageId) && string.Equals(_pipelineId, other._pipelineId) && string.Equals(_schemaName, other._schemaName);
