@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>animate.css</id>
+    <version>3.1.1.1</version>
+    <title>animate.css</title>
+    <authors>Daniel Eden</authors>
+    <owners>Daniel Eden</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>http://daneden.me/animate</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Just-add-water CSS animations</description>
+    <summary>CSS Animations</summary>
+    <tags>CSS Animation</tags>
+  </metadata>
+</package>

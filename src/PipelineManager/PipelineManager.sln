@@ -19,11 +19,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReleaseManager.Events", "Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pipelines.Autofac", "Pipelines.Autofac\Pipelines.Autofac.csproj", "{61700CC3-A24C-4FFB-A75A-53EC69FEDF47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReleaseManager.IntegrationTests.App", "ReleaseManager.IntegrationTests.App\ReleaseManager.IntegrationTests.App.csproj", "{27167323-59C0-48CE-9738-656F604F3D08}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReleaseManager.Host", "ReleaseManager.IntegrationTests.App\ReleaseManager.Host.csproj", "{27167323-59C0-48CE-9738-656F604F3D08}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pipelines.UnitTests", "Pipelines.UnitTests\Pipelines.UnitTests.csproj", "{8845AE5A-B2D2-4243-9008-8B31325AA862}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReleaseManager.Web", "ReleaseManager.Web\ReleaseManager.Web.csproj", "{720FB106-847E-4158-BBFD-AA716319AFB1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReleaseManager.DataAccess", "ReleaseManager.DataAccess\ReleaseManager.DataAccess.csproj", "{E7C47A8E-DD41-4149-B408-24DD7B806E22}"
 EndProject
@@ -32,6 +30,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pipelines.Infrastructure", "ReleaseManager.Framework\Pipelines.Infrastructure.csproj", "{D562278E-0A78-4EF9-A18D-E7B6A424CFB1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pipelines.Infrastructure.UnitTests", "Pipelines.Infrastructure.UnitTests\Pipelines.Infrastructure.UnitTests.csproj", "{A7AA155C-7373-4C1B-8E00-23A40FCEB0EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReleaseManager.Extensibility", "ReleaseManager.Extensibility\ReleaseManager.Extensibility.csproj", "{188071C0-5060-4DB8-A06E-1341052C62BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,10 +79,6 @@ Global
 		{8845AE5A-B2D2-4243-9008-8B31325AA862}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8845AE5A-B2D2-4243-9008-8B31325AA862}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8845AE5A-B2D2-4243-9008-8B31325AA862}.Release|Any CPU.Build.0 = Release|Any CPU
-		{720FB106-847E-4158-BBFD-AA716319AFB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{720FB106-847E-4158-BBFD-AA716319AFB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{720FB106-847E-4158-BBFD-AA716319AFB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{720FB106-847E-4158-BBFD-AA716319AFB1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E7C47A8E-DD41-4149-B408-24DD7B806E22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E7C47A8E-DD41-4149-B408-24DD7B806E22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7C47A8E-DD41-4149-B408-24DD7B806E22}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -99,6 +95,10 @@ Global
 		{A7AA155C-7373-4C1B-8E00-23A40FCEB0EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7AA155C-7373-4C1B-8E00-23A40FCEB0EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7AA155C-7373-4C1B-8E00-23A40FCEB0EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{188071C0-5060-4DB8-A06E-1341052C62BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{188071C0-5060-4DB8-A06E-1341052C62BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{188071C0-5060-4DB8-A06E-1341052C62BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{188071C0-5060-4DB8-A06E-1341052C62BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
