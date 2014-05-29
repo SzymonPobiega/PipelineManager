@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Pipelines.TeamCity")]
+[assembly: AssemblyTitle("Netagio.AppFramework")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Pipelines.TeamCity")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyProduct("Netagio.AppFramework")]
+[assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,12 +20,12 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("61b4f135-0360-4619-8c0f-ae821778a29e")]
+[assembly: Guid("48da9e98-dd12-4017-a016-1d546c3b8a1a")]
 
-// VersionNumber information for an assembly consists of the following four values:
+// Version information for an assembly consists of the following four values:
 //
-//      Major VersionNumber
-//      Minor VersionNumber 
+//      Major Version
+//      Minor Version 
 //      Build Number
 //      Revision
 //
