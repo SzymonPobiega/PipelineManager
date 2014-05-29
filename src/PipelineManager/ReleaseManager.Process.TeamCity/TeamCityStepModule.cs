@@ -11,6 +11,7 @@ namespace ReleaseManager.Process.TeamCity
             base.Load(builder);
             builder.RegisterType<TeamCityBuildFinishedListener>();
             builder.RegisterType<TeamCityTestResultsDownloader>();
+            builder.RegisterInstance(new TeamCityClient("http://localhost:8090")).AsImplementedInterfaces();
         }
     }
 }

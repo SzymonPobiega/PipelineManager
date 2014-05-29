@@ -10,26 +10,20 @@ namespace ReleaseManager.Process.TeamCity.Steps
 {
     public class TeamCityTestResultsDownloader : Step
     {
-        public string TeamCityUrl { get; set; }
+        private readonly ITeamCityClient _teamCityClient;
         public string SuiteType { get; set; }
 
-        public TeamCityTestResultsDownloader(UniqueStepId stepId)
+        public TeamCityTestResultsDownloader(UniqueStepId stepId, ITeamCityClient teamCityClient)
             : base(stepId)
         {
+            _teamCityClient = teamCityClient;
         }
 
         protected override bool Resume(IUnitOfWork unitOfWork)
         {
             var candidate = unitOfWork.LoadSubject<ReleaseCandidate>();
 
-            TeamCityTestOccurrences testOccurences;
-            var requestUrl = TeamCityUrl + string.Format(@"/guestAuth/app/rest/testOccurrences?locator=build:{0}", candidate.BuildId);
-            var httpClient = new HttpClient();
-            using (var resultStream = httpClient.GetStreamAsync(requestUrl).Result)
-            {
-                var serializer = new XmlSerializer(typeof(TeamCityTestOccurrences));
-                testOccurences = (TeamCityTestOccurrences)serializer.Deserialize(resultStream);
-            }
+            var testOccurences = _teamCityClient.GetTestResults(candidate.BuildId);
             var result = testOccurences.Occurrences.Any(x => x.Status == TestStatus.FAILURE)
                     ? TestResult.Failed
                     : TestResult.Success;

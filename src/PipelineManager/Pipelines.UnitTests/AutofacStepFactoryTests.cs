@@ -13,7 +13,7 @@ namespace UnitTests
         {
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterType<ParameterlessStep>();
-            var factory = new AutofacStepFactory(containerBuilder);
+            var factory = new AutofacStepFactory(containerBuilder.Build());
             var stepId = new UniqueStepId("1", "1", "1", "1","1");
             
             var instance = factory.CreateInstance(typeof (ParameterlessStep), stepId);
@@ -27,7 +27,7 @@ namespace UnitTests
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterType<DependencyImplementation>().AsImplementedInterfaces();
             containerBuilder.RegisterType<ParameterlessStepWithDependency>();
-            var factory = new AutofacStepFactory(containerBuilder);
+            var factory = new AutofacStepFactory(containerBuilder.Build());
             var stepId = new UniqueStepId("1", "1", "1", "1","1");
 
             var instance = (ParameterlessStepWithDependency) factory.CreateInstance(typeof(ParameterlessStepWithDependency), stepId);

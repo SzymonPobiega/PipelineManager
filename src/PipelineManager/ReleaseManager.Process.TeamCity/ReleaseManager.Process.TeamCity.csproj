@@ -74,6 +74,8 @@
     <Compile Include="Steps\BuildResult.cs" />
     <Compile Include="Events\TeamCityBuildFinishedEvent.cs" />
     <Compile Include="MappingProvider.cs" />
+    <Compile Include="Steps\ITeamCityClient.cs" />
+    <Compile Include="Steps\TeamCityClient.cs" />
     <Compile Include="TeamCityRuntimeModule.cs" />
     <Compile Include="TeamCityStepModule.cs" />
     <Compile Include="Steps\TeamCityBuildFinishedListener.cs" />

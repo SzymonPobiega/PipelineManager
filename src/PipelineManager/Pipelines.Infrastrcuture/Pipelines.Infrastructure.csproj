@@ -66,8 +66,10 @@
     <Compile Include="Command.cs" />
     <Compile Include="CommandEnvelope.cs" />
     <Compile Include="CommandProcessor.cs" />
+    <Compile Include="IInterceptor.cs" />
     <Compile Include="InfrastructureMappingProvider.cs" />
     <Compile Include="InfrastructureRuntimeModule.cs" />
+    <Compile Include="INHibernatePipelineHostFactory.cs" />
     <Compile Include="QueuedPipelineHost.cs" />
     <Compile Include="Records\CommandProcessingResultRecord.cs" />
     <Compile Include="Records\CommandRecord.cs" />

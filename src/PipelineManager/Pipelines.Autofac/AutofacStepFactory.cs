@@ -1,23 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using Autofac;
 using Autofac.Core;
-using Autofac.Features.ResolveAnything;
 
 namespace Pipelines.Autofac
 {
     public class AutofacStepFactory : IStepFactory
     {
-        private readonly IContainer _container;
+        private readonly ILifetimeScope _container;
         private readonly List<NamedParameter> _configParameters = new List<NamedParameter>(); 
 
-        public AutofacStepFactory(ContainerBuilder containerBuilder)
+        public AutofacStepFactory(ILifetimeScope lifetimeScope)
         {
-            //containerBuilder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
-            _container = containerBuilder.Build();
+            _container = lifetimeScope;
         }
 
 

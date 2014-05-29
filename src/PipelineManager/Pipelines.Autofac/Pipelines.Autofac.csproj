@@ -34,6 +34,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.3.4.0\lib\net40\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,10 +49,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutofacNHibernatePipelineHostFactory.cs" />
     <Compile Include="AutofacStepFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Pipelines.Infrastrcuture\Pipelines.Infrastructure.csproj">
+      <Project>{D562278E-0A78-4EF9-A18D-E7B6A424CFB1}</Project>
+      <Name>Pipelines.Infrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Pipelines\Pipelines.csproj">
       <Project>{74C985E7-82E6-4B37-8B0A-630F84945F46}</Project>
       <Name>Pipelines</Name>

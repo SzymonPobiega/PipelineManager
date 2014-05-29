@@ -12,26 +12,17 @@ namespace Pipelines.Infrastructure
     {
         private readonly CommandQueue _commandQueue;
         private readonly ISessionFactory _sessionFactory;
-        private readonly IPipelineTypeResolver _typeResolver;
-        private readonly PipelineFactory _pipelineFactory;
-        private readonly EventDispatcher _eventDispatcher;
+        private readonly INHibernatePipelineHostFactory _hostFactory;
 
         public CommandProcessor(
-            [NotNull] ISessionFactory sessionFactory, 
-            [NotNull] IPipelineTypeResolver typeResolver, 
-            [NotNull] PipelineFactory pipelineFactory, 
-            [NotNull] EventDispatcher eventDispatcher)
+            [NotNull] ISessionFactory sessionFactory, [NotNull] INHibernatePipelineHostFactory hostFactory)
         {
             if (sessionFactory == null) throw new ArgumentNullException("sessionFactory");
-            if (typeResolver == null) throw new ArgumentNullException("typeResolver");
-            if (pipelineFactory == null) throw new ArgumentNullException("pipelineFactory");
-            if (eventDispatcher == null) throw new ArgumentNullException("eventDispatcher");
+            if (hostFactory == null) throw new ArgumentNullException("hostFactory");
 
             _commandQueue = new CommandQueue(sessionFactory);
             _sessionFactory = sessionFactory;
-            _typeResolver = typeResolver;
-            _pipelineFactory = pipelineFactory;
-            _eventDispatcher = eventDispatcher;
+            _hostFactory = hostFactory;
         }
 
         public void BeginProcessing(CancellationToken token)
@@ -54,6 +45,7 @@ namespace Pipelines.Infrastructure
                     Trace.Write(ex);
                 }
             }
+// ReSharper disable once FunctionNeverReturns
         }
 
         private void Process(CommandEnvelope commandEnvelope)
@@ -61,9 +53,10 @@ namespace Pipelines.Infrastructure
             using (var session = _sessionFactory.OpenSession())
             using (var tx = session.BeginTransaction())
             {
-                var host = new PipelineHost(_typeResolver, new NHibernatePipelineRepository(session,_eventDispatcher), _pipelineFactory);
-
-                commandEnvelope.Payload.Execute(host);                    
+                //var host = new PipelineHost(_typeResolver, new NHibernatePipelineRepository(session, _eventDispatcher), _pipelineFactory);
+                var host = _hostFactory.Create(session);
+                commandEnvelope.Payload.Execute(host);
+                _hostFactory.Release(host);
                 CommandQueue.MarkProcessed(commandEnvelope.Sequence, session);
                 tx.Commit();
             }
@@ -80,6 +73,7 @@ namespace Pipelines.Infrastructure
                     lastProcessedCommand = command.Sequence;
                 }
             }
+// ReSharper disable once FunctionNeverReturns
         }
     }
 }

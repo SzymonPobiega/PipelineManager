@@ -118,6 +118,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompositionRoot.cs" />
     <Compile Include="Controllers\ExtensionsController.cs" />
     <Compile Include="Controllers\ExtensionsModel.cs" />
     <Compile Include="Controllers\PipelineController.cs" />
