@@ -7,6 +7,7 @@ namespace Pipelines
     public enum StepExecutionResult
     {
         Finished,
-        WaitingForExternalDependency
+        WaitingForExternalDependency,
+        Fail
     }
 }

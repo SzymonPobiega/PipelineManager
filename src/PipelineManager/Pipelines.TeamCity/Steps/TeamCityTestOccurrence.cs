@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace ReleaseManager.Process.TeamCity
+namespace ReleaseManager.Process.TeamCity.Steps
 {
     [XmlType("testOccurrence")]
     public class TeamCityTestOccurrence

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace ReleaseManager.Process.TeamCity
+namespace ReleaseManager.Process.TeamCity.Steps
 {
     [XmlRoot("testOccurrences")]
     public class TeamCityTestOccurrences

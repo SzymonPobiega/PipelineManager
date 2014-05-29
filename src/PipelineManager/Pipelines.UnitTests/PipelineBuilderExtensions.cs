@@ -7,7 +7,12 @@ namespace UnitTests
     {
         public static Pipeline Build(this IPipelineBuilder builder)
         {
-            return new PipelineFactory(new ActivatorStepFactory()).Create("Pipeline", builder.BuildSchema());
+            return builder.Build(new NoRetryFailureHandlingStrategy());
+        }
+
+        public static Pipeline Build(this IPipelineBuilder builder, IFailureHandlingStrategy failureHandlingStrategy)
+        {
+            return new PipelineFactory(new ActivatorStepFactory(), failureHandlingStrategy).Create("Pipeline", builder.BuildSchema());
         }
     }
 }

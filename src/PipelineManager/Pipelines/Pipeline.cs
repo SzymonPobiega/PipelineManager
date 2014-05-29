@@ -42,6 +42,18 @@ namespace Pipelines
             var stage = _stages.First(x => x.StageId == evnt.StepId.StageId);
             stage.On(evnt);
         }
+        
+        public void On(StepFailedEvent evnt)
+        {
+            var stage = _stages.First(x => x.StageId == evnt.StepId.StageId);
+            stage.On(evnt);
+        }
+        
+        public void On(StepAttemptFailedEvent evnt)
+        {
+            var stage = _stages.First(x => x.StageId == evnt.StepId.StageId);
+            stage.On(evnt);
+        }
 
         public void On(StageFinishedEvent evnt)
         {

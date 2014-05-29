@@ -51,7 +51,11 @@
     <Compile Include="ActivityState.cs" />
     <Compile Include="CompositeEventSink.cs" />
     <Compile Include="DynamicEventSink.cs" />
+    <Compile Include="Events\StageFailedEvent.cs" />
+    <Compile Include="Events\StepAttemptFailedEvent.cs" />
+    <Compile Include="Events\StepFailedEvent.cs" />
     <Compile Include="IEventSink.cs" />
+    <Compile Include="IFailureHandlingStrategy.cs" />
     <Compile Include="IInputTransformer.cs" />
     <Compile Include="IPipelineHost.cs" />
     <Compile Include="IPipelineRepository.cs" />
@@ -60,6 +64,7 @@
     <Compile Include="IStepPropertyValueProvider.cs" />
     <Compile Include="IStepFactory.cs" />
     <Compile Include="IUnitOfWork.cs" />
+    <Compile Include="NoRetryFailureHandlingStrategy.cs" />
     <Compile Include="PipelineData.cs" />
     <Compile Include="PipelineFactory.cs" />
     <Compile Include="PipelineHost.cs" />

@@ -5,6 +5,8 @@ namespace Pipelines
         NotStarted,
         Running,
         Finished,
+        Failing,
+        Failed,
         WaitingForExternalDependency
     }
 }

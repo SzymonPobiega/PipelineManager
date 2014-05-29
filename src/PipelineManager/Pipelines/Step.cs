@@ -14,11 +14,13 @@
                 return StepExecutionResult.WaitingForExternalDependency;
             }
             var typedData = (T) optionalData.Consume();
-            Resume(unitOfWork, typedData);
-            return StepExecutionResult.Finished;
+            var result = Resume(unitOfWork, typedData);
+            return result
+                ? StepExecutionResult.Finished
+                : StepExecutionResult.Fail;
         }
 
-        protected abstract void Resume(IUnitOfWork unitOfWork, T data);
+        protected abstract bool Resume(IUnitOfWork unitOfWork, T data);
     }
 
     public abstract class Step : BaseStep
@@ -29,10 +31,12 @@
 
         public override StepExecutionResult Resume(IUnitOfWork unitOfWork, DataContainer optionalData)
         {
-            Resume(unitOfWork);
-            return StepExecutionResult.Finished;
+            var result = Resume(unitOfWork);
+            return result
+                ? StepExecutionResult.Finished
+                : StepExecutionResult.Fail;
         }
 
-        protected abstract void Resume(IUnitOfWork unitOfWork);
+        protected abstract bool Resume(IUnitOfWork unitOfWork);
     }
 }

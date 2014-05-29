@@ -8,11 +8,13 @@ namespace Pipelines
     public class PipelineFactory
     {
         private readonly IStepFactory _stepFactory;
+        private readonly IFailureHandlingStrategy _failureHandlingStrategy;
         private readonly IStepPropertyValueProvider[] _stepPropertyValueProviders;
 
-        public PipelineFactory(IStepFactory stepFactory, params IStepPropertyValueProvider[] stepPropertyValueProviders)
+        public PipelineFactory(IStepFactory stepFactory, IFailureHandlingStrategy failureHandlingStrategy, params IStepPropertyValueProvider[] stepPropertyValueProviders)
         {
             _stepFactory = stepFactory;
+            _failureHandlingStrategy = failureHandlingStrategy;
             _stepPropertyValueProviders = stepPropertyValueProviders;
         }
 
@@ -40,7 +42,7 @@ namespace Pipelines
         private Activity BuildActivity(UniqueStageId stageId, ActivitySchema activitySchema)
         {
             var activityId = stageId.MakeActivityId(activitySchema.Name);
-            return new Activity(activitySchema.Name, BuildSteps(activityId, activitySchema.Steps));
+            return new Activity(activitySchema.Name, _failureHandlingStrategy, BuildSteps(activityId, activitySchema.Steps));
         }
 
         private BaseStep[] BuildSteps(UniqueActivityId activityId, IEnumerable<StepSchema> stepSchemas)

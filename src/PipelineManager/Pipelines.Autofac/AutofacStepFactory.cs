@@ -16,7 +16,7 @@ namespace Pipelines.Autofac
 
         public AutofacStepFactory(ContainerBuilder containerBuilder)
         {
-            containerBuilder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
+            //containerBuilder.RegisterSource(new AnyConcreteTypeNotAlreadyRegisteredSource());
             _container = containerBuilder.Build();
         }
 

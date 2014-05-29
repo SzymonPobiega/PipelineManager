@@ -94,7 +94,7 @@ namespace UnitTests
 
         private static PipelineFactory CreatePipelineFactory()
         {
-            return new PipelineFactory(new ActivatorStepFactory());
+            return new PipelineFactory(new ActivatorStepFactory(), new NoRetryFailureHandlingStrategy());
         }
         
         private PipelineData LoadPipelineDataForJustCreatedPipeline(string pipelineId, string schemaName)

@@ -3,11 +3,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Xml.Serialization;
 using Pipelines;
-using Pipelines.Web;
 using ReleaseManager.Events;
 using ReleaseManager.Model;
 
-namespace ReleaseManager.Process.TeamCity
+namespace ReleaseManager.Process.TeamCity.Steps
 {
     public class TeamCityTestResultsDownloader : Step
     {
@@ -19,7 +18,7 @@ namespace ReleaseManager.Process.TeamCity
         {
         }
 
-        protected override void Resume(IUnitOfWork unitOfWork)
+        protected override bool Resume(IUnitOfWork unitOfWork)
         {
             var candidate = unitOfWork.LoadSubject<ReleaseCandidate>();
 
@@ -38,6 +37,7 @@ namespace ReleaseManager.Process.TeamCity
             var outputs = testOccurences.Occurrences.Select(x => new TestOutput(x.Name, MapStatus(x.Status))).ToList();
 
             candidate.ProcessTestSuiteResults(result, SuiteType, outputs);
+            return result != TestResult.Failed;
         }
 
         private TestResult MapStatus(TestStatus status)

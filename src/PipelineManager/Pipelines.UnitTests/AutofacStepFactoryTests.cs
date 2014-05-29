@@ -12,6 +12,7 @@ namespace UnitTests
         public void It_passes_step_id()
         {
             var containerBuilder = new ContainerBuilder();
+            containerBuilder.RegisterType<ParameterlessStep>();
             var factory = new AutofacStepFactory(containerBuilder);
             var stepId = new UniqueStepId("1", "1", "1", "1","1");
             
@@ -25,6 +26,7 @@ namespace UnitTests
         {
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterType<DependencyImplementation>().AsImplementedInterfaces();
+            containerBuilder.RegisterType<ParameterlessStepWithDependency>();
             var factory = new AutofacStepFactory(containerBuilder);
             var stepId = new UniqueStepId("1", "1", "1", "1","1");
 
@@ -41,7 +43,7 @@ namespace UnitTests
             {
             }
 
-            protected override void Resume(IUnitOfWork unitOfWork)
+            protected override bool Resume(IUnitOfWork unitOfWork)
             {
                 throw new System.NotImplementedException();
             }
@@ -69,7 +71,7 @@ namespace UnitTests
                 get { return _dependency; }
             }
 
-            protected override void Resume(IUnitOfWork unitOfWork)
+            protected override bool Resume(IUnitOfWork unitOfWork)
             {
                 throw new System.NotImplementedException();
             }
@@ -81,8 +83,9 @@ namespace UnitTests
             {
             }
 
-            protected override void Resume(IUnitOfWork unitOfWork)
+            protected override bool Resume(IUnitOfWork unitOfWork)
             {
+                return true;
             }
         }
     }

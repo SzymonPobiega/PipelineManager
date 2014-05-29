@@ -53,6 +53,75 @@ namespace UnitTests
         }
 
         [Test]
+        public void Pipeline_execution_stops_on_first_failed_step()
+        {
+            UniqueStepId firstStepId = null;
+            UniqueStepId failedStepId = null;
+
+            var pipeline = new PipelineBuilder()
+                .AddStage(StageTriggerMode.Automatic)
+                .AddActivity()
+                .AddStepWithoutDependencies(id => firstStepId = id)
+                .AddStep<FailingStep>(id => failedStepId = id)
+                .AddStepWithoutDependencies()
+                .Build();
+
+            var result = pipeline.Run(EventSink, null);
+
+            Assert.AreEqual(StageState.Failed, result);
+
+            Expect(new StepExecutedEvent(firstStepId))
+                .ThenExpect(new StepAttemptFailedEvent(failedStepId))
+                .ThenExpect(new StepFailedEvent(failedStepId))
+                .ThenExpectAny<StageFailedEvent>()
+                .AndNothingElse();
+        }
+
+        [Test]
+        public void Pipeline_requests_retry_when_allowed()
+        {
+            UniqueStepId firstStepId = null;
+            UniqueStepId failedStepId = null;
+
+            var pipeline = new PipelineBuilder()
+                .AddStage(StageTriggerMode.Automatic)
+                .AddActivity()
+                .AddStepWithoutDependencies(id => firstStepId = id)
+                .AddStep<FailingStep>(id => failedStepId = id)
+                .AddStepWithoutDependencies()
+                .Build(new RetryOnceFailureHandlingStrategy());
+
+            var result = pipeline.Run(EventSink, null);
+
+            Assert.AreEqual(StageState.RequestsRetry, result);
+
+            Expect(new StepExecutedEvent(firstStepId))
+                .ThenExpect(new StepAttemptFailedEvent(failedStepId))
+                .AndNothingElse();
+        }
+
+        [Test]
+        public void Resuming_execution_of_a_failed_pipeline_fails()
+        {
+            var pipeline = new PipelineBuilder()
+                .AddStage(StageTriggerMode.Automatic)
+                .AddActivity()
+                .AddStepWithoutDependencies()
+                .AddStep<FailingStep>()
+                .AddStepWithoutDependencies()
+                .Build();
+
+            var result = pipeline.Run(EventSink, null);
+
+            Assert.AreEqual(StageState.Failed, result);
+            EventSink.Events.Clear();
+
+            pipeline.Run(EventSink, null);
+
+            ExpectNothing();
+        }
+
+        [Test]
         public void Running_multi_stage_multi_activity_pipeline_that_waits_for_external_dependency_does_nothing()
         {
             var pipeline = new PipelineBuilder()
@@ -93,7 +162,7 @@ namespace UnitTests
 
             var result = pipeline.Run(EventSink, null);
 
-            Assert.AreEqual(StageState.WaitingForManualTrigger, result);
+            Assert.AreEqual(StageState.OnHold, result);
 
             Expect(new StepExecutedEvent(firstStepId))
                 .ThenExpectAny<StageFinishedEvent>()
@@ -115,7 +184,7 @@ namespace UnitTests
 
             var result = pipeline.Run(EventSink, null);
 
-            Assert.AreEqual(StageState.WaitingForManualTrigger, result);
+            Assert.AreEqual(StageState.OnHold, result);
 
             Expect(new StepExecutedEvent(firstStepId))
                 .ThenExpectAny<StageFinishedEvent>()
@@ -137,7 +206,7 @@ namespace UnitTests
 
             var result = pipeline.Run(EventSink, null);
 
-            Assert.AreEqual(StageState.WaitingForManualTrigger, result);
+            Assert.AreEqual(StageState.OnHold, result);
             EventSink.Events.Clear();
 
             pipeline.Trigger();

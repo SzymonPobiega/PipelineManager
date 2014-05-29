@@ -1,4 +1,4 @@
-﻿namespace ReleaseManager.Process.TeamCity
+﻿namespace ReleaseManager.Process.TeamCity.Steps
 {
     public enum TestStatus
     {

@@ -58,10 +58,12 @@
     <Compile Include="EventAsserter.cs" />
     <Compile Include="EventAsserterExtensions.cs" />
     <Compile Include="EventDriventTest.cs" />
+    <Compile Include="FailingStep.cs" />
     <Compile Include="PipelineBuilderExtensions.cs" />
     <Compile Include="PipelineHostTests.cs" />
     <Compile Include="PipelineTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RetryOnceFailureHandlingStrategy.cs" />
     <Compile Include="StepWithDependencies.cs" />
     <Compile Include="StepWithoutDependencies.cs" />
     <Compile Include="UnitOfWorkTests.cs" />
