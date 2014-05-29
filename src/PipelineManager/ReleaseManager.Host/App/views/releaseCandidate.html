@@ -1,0 +1,29 @@
+﻿<section>
+    
+    <h2 data-bind="text: displayName"></h2>
+    
+    <p>
+        Currently deployed to:
+        <!-- ko foreach: deployedTo -->
+        <span class="label label-default" data-bind="text: $data"></span>
+        <!-- /ko -->
+    </p>
+    
+    <ul class="nav nav-tabs" id="tabs">
+        <li class="active"><a href="#tests" data-toggle="tab">Tests</a></li>
+        <li><a href="#deployments" data-toggle="tab">Deployments</a></li>
+        <li><a href="#history" data-toggle="tab">History</a></li>
+        <!-- ko foreach: tabs -->
+        <li><a data-toggle="tab" data-bind="text: title, attr : {href : '#' + tabId()}, visible : visible"></a></li>
+        <!-- /ko -->
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane active" id="tests" data-bind="compose: { model : 'viewmodels/releaseCandidateTests', activationData : testsLink}"></div>
+        <div class="tab-pane" id="deployments" data-bind="compose: { model : 'viewmodels/releaseCandidateDeployments', activationData : deploymentsLink}"></div>
+        <div class="tab-pane" id="history" data-bind="compose: { model : 'viewmodels/releaseCandidateHistory', activationData : historyLink}"></div>
+        <!-- ko foreach: tabs -->
+        <div class="tab-pane" data-bind="attr: {id : tabId}, compose: { model: viewModel, activationData: $data }, visible : visible"></div>
+        <!-- /ko -->
+        </div>
+</section>

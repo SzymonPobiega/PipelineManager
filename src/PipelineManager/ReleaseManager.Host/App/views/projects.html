@@ -1,0 +1,12 @@
+﻿<section>
+
+    <h2>Projects</h2>
+
+    <div class="list-group" data-bind="foreach: projects">
+        <a class="list-group-item" data-bind="css: healthClass, click: $parent.showPipeline">
+            <span data-bind="text: name"></span>
+            <span class="badge" data-bind="text: latestVersion"></span>
+        </a>
+    </div>
+
+</section>

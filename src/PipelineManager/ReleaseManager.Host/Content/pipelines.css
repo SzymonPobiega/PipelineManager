@@ -1,0 +1,102 @@
+﻿#pageHost {
+    margin: 20px
+}
+
+.stages {
+    display: table-row   
+}
+
+.activities {
+    clear: both;
+}
+
+.stage-name {
+    float: left;
+}
+
+.pipeline {
+    display: table;
+    width: 100%;
+    margin-bottom: 40px;
+    margin-top: 40px;
+}
+
+.pipeline-heading {
+    text-align: center;
+}
+
+.element-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+.element-failed {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+.element-working {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+
+.stage-body {
+    display: table-cell;
+    padding: 10px;    
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 4px;
+}
+
+.version {
+    float: right;
+}
+
+.version-link {
+    cursor: pointer;
+}
+
+.version-successful {
+    color: #3c763d;
+}
+
+.version-failed {
+    color: #a94442;
+}
+
+.arrow {
+    display: table-cell;    
+    vertical-align: middle;
+    padding: 20px;
+    font-size: 48px;
+}
+
+.activity {
+    padding: 10px;
+    margin: 5px;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.panel-heading a:after {
+    font-family: 'Glyphicons Halflings';
+    content: "\e114";    
+    float: right; 
+    color: grey; 
+}
+.panel-heading a.collapsed:after {
+    content: "\e080";
+}
+
+.tab-pane {
+    margin-top: 20px;
+}
+
+.property-value {
+    float: right;
+}

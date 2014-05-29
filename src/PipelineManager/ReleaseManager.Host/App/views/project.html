@@ -1,0 +1,64 @@
+﻿<section>
+
+    <h2 data-bind="text: displayName" class="pipeline-heading"></h2>
+
+    <div class="pipeline">
+        <div class="stages" data-bind="foreach: stages">
+            <div class="stage-body" data-bind="style: { width: $parent.relativeStageWidth()}, css: style">
+                <div class="stage-name" data-bind="text: name">
+                </div>
+                <div class="version">
+                    <div>
+                        <span class="glyphicon" data-bind="css: latestIcon"></span>
+                        <a class="version-link" data-bind="text: latestVersion, css : latestLinkStyle, click: function(data, event) { $parent.displayReleaseFor(data, latestBuildLink) }, if: latestVersion() !== null"></a>
+                    </div>
+                    <div data-bind="if: latestSuccessfulVersion() !== null && !successful()" class="version-successful">
+                        <span class="glyphicon glyphicon-ok-circle"></span>
+                        <a class="version-link version-successful" data-bind="text: latestSuccessfulVersion, click: function(data, event) { $parent.displayReleaseFor(data, latestSuccessfulBuildLink) }"></a>
+                    </div>
+                    </div>
+                <div style="clear: both"></div>
+                <div class="activities" data-bind="foreach: activities">
+                    <div class="activity element-success" data-bind="text: name, css : $parent.style"></div>
+                </div>
+            </div>
+            <div class="arrow" data-bind="ifnot: isLast">
+                <span class="glyphicon glyphicon-arrow-right"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Releases</div>
+                <ul class="list-group">
+                    <li class="list-group-item">Latest release<span class="property-value">1.2.3.4, PROD, 12 Jun 2014 (5 days ago)</span></li>
+                    <li class="list-group-item">Latest build<span class="property-value">1.2.4.5, INT (created 2 days ago)</span></li>
+                    <li class="list-group-item">Number of tests (failing)<span class="property-value">56 (0)</span></li>
+                    <li class="list-group-item">Average lead time<span class="property-value">2d 10h</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Environments</div>
+                <ul class="list-group">
+                    <li class="list-group-item">INTEGRATION<span class="property-value">1.2.3.4</span></li>
+                    <li class="list-group-item">UAT<span class="property-value">1.2.3.4</span></li>
+                    <li class="list-group-item">PROD<span class="property-value">1.2.3.4</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Failure rates (%)</div>
+                <ul class="list-group">
+                    <li class="list-group-item">COMMIT<span class="property-value">50%</span></li>
+                    <li class="list-group-item">INTEGRATION<span class="property-value">10%</span></li>
+                    <li class="list-group-item">UAT<span class="property-value">1%</span></li>
+                    <li class="list-group-item">PROD<span class="property-value">0%</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

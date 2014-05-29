@@ -1,0 +1,22 @@
+﻿
+<div data-bind="foreach: suites">
+    <div class="panel" data-bind="css: resultStyle">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <a data-toggle="collapse"
+                   class="collapsed"
+                   data-bind="attr : { href : '#collapse' + $index(), 'data-target' : '#collapse' + $index() }">
+                    <span data-bind="text: type"></span>
+                    <span class="badge" data-bind="text: testCount"></span>
+                </a>
+            </h3>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse" data-bind="attr : { id : 'collapse' + $index() }">
+            <div class="panel-body">
+                <ul class="list-group" data-bind="foreach: testCases">
+                    <li class="list-group-item" data-bind="text: name, css: resultStyle"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

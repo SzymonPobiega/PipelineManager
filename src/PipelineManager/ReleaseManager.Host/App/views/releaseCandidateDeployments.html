@@ -1,0 +1,10 @@
+﻿
+<ul class="list-group" data-bind="foreach: deployments">
+    <li class="list-group-item" data-bind="css: style">
+        <span data-bind="text: environment"></span>
+        <!-- ko foreach: $parent.extensions -->
+        <span data-bind="compose: { model: 'viewmodels/'+ $data, activationData: $parent.uniqueId }"></span>
+        <!-- /ko -->
+        <span class="property-value" data-bind="text: date"></span>
+    </li>
+</ul>

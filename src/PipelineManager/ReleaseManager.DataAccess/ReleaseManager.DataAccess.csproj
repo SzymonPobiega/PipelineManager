@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E7C47A8E-DD41-4149-B408-24DD7B806E22}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ReleaseManager.DataAccess</RootNamespace>
+    <AssemblyName>ReleaseManager.DataAccess</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=3.4.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Autofac.3.4.0\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="JetBrains.Annotations">
+      <HintPath>..\packages\JetBrains.Annotations.7.0\lib\net45\JetBrains.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataAccessRuntimeModule.cs" />
+    <Compile Include="ReadModels\Environment.cs" />
+    <Compile Include="ReadModels\EnvironmentReadModel.cs" />
+    <Compile Include="ThrottledStageTrigger.cs" />
+    <Compile Include="ReadModels\ReleaseCandidateReadModel.cs" />
+    <Compile Include="ReadModels\Deployment.cs" />
+    <Compile Include="ReadModels\Project.cs" />
+    <Compile Include="ReadModels\ProjectReadModel.cs" />
+    <Compile Include="ReadModels\DeployedVersion.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReadModels\Stage.cs" />
+    <Compile Include="ReadModels\ReleaseCandidate.cs" />
+    <Compile Include="ReadModels\TestSuite.cs" />
+    <Compile Include="ReadModels\TestCase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Pipelines.Infrastrcuture\Pipelines.Infrastructure.csproj">
+      <Project>{D562278E-0A78-4EF9-A18D-E7B6A424CFB1}</Project>
+      <Name>Pipelines.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Pipelines\Pipelines.csproj">
+      <Project>{74C985E7-82E6-4B37-8B0A-630F84945F46}</Project>
+      <Name>Pipelines</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ReleaseManager.Events\ReleaseManager.Events.csproj">
+      <Project>{8A648026-B381-4CFC-8953-7E748C8321D6}</Project>
+      <Name>ReleaseManager.Events</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ReleaseManager.Extensibility\ReleaseManager.Extensibility.csproj">
+      <Project>{188071C0-5060-4DB8-A06E-1341052C62BD}</Project>
+      <Name>ReleaseManager.Extensibility</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ReleaseManager.Process.Octopus\ReleaseManager.Process.Octopus.csproj">
+      <Project>{23327E4A-C4F4-4FDE-ACB0-DD0C5F065B5A}</Project>
+      <Name>ReleaseManager.Process.Octopus</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
