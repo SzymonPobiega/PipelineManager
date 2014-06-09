@@ -3,8 +3,8 @@
     <h2 data-bind="text: displayName" class="pipeline-heading"></h2>
 
     <div class="pipeline">
-        <div class="stages" data-bind="foreach: stages">
-            <div class="stage-body" data-bind="style: { width: $parent.relativeStageWidth()}, css: style">
+        <div class="stages row" data-bind="foreach: stages">
+            <div class="stage-body col-md-2 col-xs-4" data-bind="css: style">
                 <div class="stage-name" data-bind="text: name">
                 </div>
                 <div class="version">
@@ -16,13 +16,13 @@
                         <span class="glyphicon glyphicon-ok-circle"></span>
                         <a class="version-link version-successful" data-bind="text: latestSuccessfulVersion, click: function(data, event) { $parent.displayReleaseFor(data, latestSuccessfulBuildLink) }"></a>
                     </div>
-                    </div>
+                </div>
                 <div style="clear: both"></div>
                 <div class="activities" data-bind="foreach: activities">
                     <div class="activity element-success" data-bind="text: name, css : $parent.style"></div>
                 </div>
             </div>
-            <div class="arrow" data-bind="ifnot: isLast">
+            <div class="arrow col-md-1 col-xs-2" data-bind="ifnot: isLast">
                 <span class="glyphicon glyphicon-arrow-right"></span>
             </div>
         </div>

@@ -45,7 +45,6 @@
   <ItemGroup>
     <Compile Include="ActivatorStepFactory.cs" />
     <Compile Include="Activity.cs" />
-    <Compile Include="CodeBasedTypeResolver.cs" />
     <Compile Include="DataContainer.cs" />
     <Compile Include="DictionaryStepPropertyValueProvider.cs" />
     <Compile Include="ActivityState.cs" />
@@ -59,6 +58,8 @@
     <Compile Include="IInputTransformer.cs" />
     <Compile Include="IPipelineHost.cs" />
     <Compile Include="IPipelineRepository.cs" />
+    <Compile Include="IPipelineSchemaRepository.cs" />
+    <Compile Include="IPipelineSchemaSelector.cs" />
     <Compile Include="IPipelineTypeResolver.cs" />
     <Compile Include="Events\PipelineCreatedEvent.cs" />
     <Compile Include="IStepPropertyValueProvider.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="PipelineHost.cs" />
     <Compile Include="Events\StageFinishedEvent.cs" />
     <Compile Include="PipelineSubject.cs" />
+    <Compile Include="PipelineTypeResolver.cs" />
     <Compile Include="Schema\Builders\ActivityBuilder.cs" />
     <Compile Include="Schema\Builders\IActivityBuilder.cs" />
     <Compile Include="Schema\Builders\IPipelineBuilder.cs" />

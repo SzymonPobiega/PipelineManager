@@ -53,7 +53,6 @@ namespace Pipelines.Infrastructure
             using (var session = _sessionFactory.OpenSession())
             using (var tx = session.BeginTransaction())
             {
-                //var host = new PipelineHost(_typeResolver, new NHibernatePipelineRepository(session, _eventDispatcher), _pipelineFactory);
                 var host = _hostFactory.Create(session);
                 commandEnvelope.Payload.Execute(host);
                 _hostFactory.Release(host);

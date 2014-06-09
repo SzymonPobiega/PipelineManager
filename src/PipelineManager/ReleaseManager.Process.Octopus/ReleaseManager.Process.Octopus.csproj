@@ -84,7 +84,9 @@
     <Compile Include="DataAccess\OctopusDeploymentDetails.cs" />
     <Compile Include="Controllers\OctopusDeploymentDetailsController.cs" />
     <Compile Include="DataAccess\OctopusDeploymentDetailsView.cs" />
+    <Compile Include="IOctopusFacade.cs" />
     <Compile Include="MappingProvider.cs" />
+    <Compile Include="OctopusFacade.cs" />
     <Compile Include="OctopusRuntimeModule.cs" />
     <Compile Include="OctopusStepModule.cs" />
     <Compile Include="Steps\CreateRelease.cs" />

@@ -119,6 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompositionRoot.cs" />
+    <Compile Include="Controllers\Admin\ProjectAdminController.cs" />
     <Compile Include="Controllers\ExtensionsController.cs" />
     <Compile Include="Controllers\ExtensionsModel.cs" />
     <Compile Include="Controllers\PipelineController.cs" />
@@ -147,7 +148,7 @@
     <Compile Include="NHibernateSessionFactoryBuilder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StandardProcessTypeResolver.cs" />
+    <Compile Include="StandardProcessSchemaSelector.cs" />
     <Compile Include="WebServerSetup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -312,6 +313,10 @@
       <Project>{23327e4a-c4f4-4fde-acb0-dd0c5f065b5a}</Project>
       <Name>ReleaseManager.Process.Octopus</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ReleaseManager.StandardProcesses\ReleaseManager.StandardProcesses.csproj">
+      <Project>{AAB67513-E09A-4528-91CF-F87CF167B352}</Project>
+      <Name>ReleaseManager.StandardProcesses</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\bootstrap.css">
@@ -452,6 +457,10 @@
     <Content Include="Scripts\json.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App\viewmodels\admin\" />
+    <Folder Include="App\views\admin\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

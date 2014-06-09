@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Octopus.Client;
-using Octopus.Client.Model;
 using Pipelines;
 
 namespace ReleaseManager.Process.Octopus.Model
@@ -16,28 +14,22 @@ namespace ReleaseManager.Process.Octopus.Model
             Apply(new ReleaseCreatedEvent(releaseId));
         }
 
-        public void RequestDeploymentTo(string environment, string correlationId, IOctopusRepository octopusRepository)
+        public void RequestDeploymentTo(string environment, string correlationId, IOctopusFacade octopusFacade)
         {
-            var environmentResource = octopusRepository.Environments.FindByName(environment);
+            var environmentResource = octopusFacade.FindEnvironmentByName(environment);
 
-            var deployment = octopusRepository.Deployments.Create(new DeploymentResource
-            {
-                EnvironmentId = environmentResource.Id,
-                ReleaseId = _releaseId,
-            });
+            var deployment = octopusFacade.CreateDeployment(environmentResource.Id, _releaseId);
             Apply(new DeploymentRequestedEvent(deployment.Id, environment, correlationId, deployment.TaskId, deployment.Links["Self"].AsString()));
         }
 
 
-        public Deployment WaitForDeploymentToFinish(string correlationId, IOctopusRepository octopusRepository)
+        public Deployment WaitForDeploymentToFinish(string correlationId, IOctopusFacade octopusFacade)
         {
             var deployment = _deployments.First(x => x.CorrelationId == correlationId);
-            var task = octopusRepository.Tasks.Get(deployment.TaskId);
 
-            octopusRepository.Tasks.WaitForCompletion(task);
-            var updated = octopusRepository.Tasks.Get(deployment.TaskId);
+            var task = octopusFacade.WaitForTaskCompletion(deployment.TaskId);
 
-            var result = updated.FinishedSuccessfully ? DeploymentResult.Succeeded : DeploymentResult.Failed;
+            var result = task.FinishedSuccessfully ? DeploymentResult.Succeeded : DeploymentResult.Failed;
 
             Apply(new DeploymentFinishedEvent(deployment.Id, result));
             return deployment;

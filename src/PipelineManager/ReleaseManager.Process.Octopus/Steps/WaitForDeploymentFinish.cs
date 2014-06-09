@@ -7,12 +7,12 @@ namespace ReleaseManager.Process.Octopus.Steps
 {
     public class WaitForDeploymentFinish : Step
     {
-        private readonly IOctopusRepository _octopusRepository;
+        private readonly IOctopusFacade _octopusFacade;
 
-        public WaitForDeploymentFinish(UniqueStepId stepId, IOctopusRepository octopusRepository)
+        public WaitForDeploymentFinish(UniqueStepId stepId, IOctopusFacade octopusFacade)
             : base(stepId)
         {
-            _octopusRepository = octopusRepository;
+            _octopusFacade = octopusFacade;
         }
 
         protected override bool Resume(IUnitOfWork unitOfWork)
@@ -20,7 +20,7 @@ namespace ReleaseManager.Process.Octopus.Steps
             var candidate = unitOfWork.LoadSubject<ReleaseCandidate>();
             var release = unitOfWork.LoadSubject<OctopusRelease>();
 
-            var deployment = release.WaitForDeploymentToFinish(StepId.UniqueActivityId.ToString(), _octopusRepository);
+            var deployment = release.WaitForDeploymentToFinish(StepId.UniqueActivityId.ToString(), _octopusFacade);
             if (deployment.Result == DeploymentResult.Succeeded)
             {
                 candidate.Deployed(deployment.Environment, deployment.Id);

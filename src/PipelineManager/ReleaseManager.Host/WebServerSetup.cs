@@ -22,7 +22,7 @@ namespace ReleaseManager.Host
 
         private static void ConfigureStaticFiles(IAppBuilder x)
         {
-#if DEBUG
+#if DEBUG2
             var baseContentFolder = "../../";
 #else
             var baseContentFolder = ".";

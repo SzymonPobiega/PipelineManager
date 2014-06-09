@@ -3,7 +3,6 @@
 }
 
 .stages {
-    display: table-row   
 }
 
 .activities {
@@ -15,8 +14,6 @@
 }
 
 .pipeline {
-    display: table;
-    width: 100%;
     margin-bottom: 40px;
     margin-top: 40px;
 }
@@ -68,8 +65,8 @@
 }
 
 .arrow {
-    display: table-cell;    
     vertical-align: middle;
+    text-align: center;
     padding: 20px;
     font-size: 48px;
 }

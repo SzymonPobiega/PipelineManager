@@ -16,9 +16,11 @@ namespace Pipelines.Autofac
 
         public IPipelineHost Create(ISession session)
         {
-            var childScope = _parentScope.BeginLifetimeScope();
+            ILifetimeScope childScope = null;
+// ReSharper disable once AccessToModifiedClosure
+            childScope = _parentScope.BeginLifetimeScope(x => x.Register(context => new AutofacStepFactory(childScope)).AsImplementedInterfaces());
             var pipelineRepository = new NHibernatePipelineRepository(session, childScope.Resolve<EventDispatcher>());
-            var host = new PipelineHost(_parentScope.Resolve<IPipelineTypeResolver>(), pipelineRepository, childScope.Resolve<PipelineFactory>());
+            var host = new PipelineHost(childScope.Resolve<IPipelineTypeResolver>(), pipelineRepository, childScope.Resolve<PipelineFactory>());
             return new AutofacPipelineHost(host, childScope);
         }
 

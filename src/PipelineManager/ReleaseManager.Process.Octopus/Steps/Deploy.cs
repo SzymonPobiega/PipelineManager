@@ -6,21 +6,21 @@ namespace ReleaseManager.Process.Octopus.Steps
 {
     public class Deploy : Step
     {
-        private readonly IOctopusRepository _octopusRepository;
+        private readonly IOctopusFacade _octopusFacade;
 
         public string Environment { get; set; }
 
-        public Deploy(UniqueStepId stepId, IOctopusRepository octopusRepository) 
+        public Deploy(UniqueStepId stepId, IOctopusFacade octopusFacade) 
             : base(stepId)
         {
-            _octopusRepository = octopusRepository;
+            _octopusFacade = octopusFacade;
         }
 
         protected override bool Resume(IUnitOfWork unitOfWork)
         {
             var release = unitOfWork.LoadSubject<OctopusRelease>();
 
-            release.RequestDeploymentTo(Environment, StepId.UniqueActivityId.ToString(), _octopusRepository);
+            release.RequestDeploymentTo(Environment, StepId.UniqueActivityId.ToString(), _octopusFacade);
             return true;
         }
     }

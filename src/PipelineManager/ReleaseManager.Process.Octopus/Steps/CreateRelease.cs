@@ -13,12 +13,12 @@ namespace ReleaseManager.Process.Octopus.Steps
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof (CreateRelease));
 
-        private readonly IOctopusRepository _octopusRepository;
+        private readonly IOctopusFacade _octopusFacade;
 
-        public CreateRelease(UniqueStepId stepId, IOctopusRepository octopusRepository) 
+        public CreateRelease(UniqueStepId stepId, IOctopusFacade octopusFacade) 
             : base(stepId)
         {
-            _octopusRepository = octopusRepository;
+            _octopusFacade = octopusFacade;
         }
 
         protected override bool Resume(IUnitOfWork unitOfWork)
@@ -29,47 +29,43 @@ namespace ReleaseManager.Process.Octopus.Steps
             var projectName = releaseCandidate.ProjectName;
             var versionNumber = releaseCandidate.VersionNumber;
 
-            var existingRelease = _octopusRepository.Releases.FindOne(r => r.Version == versionNumber);
+            var existingRelease = _octopusFacade.FindRelease(versionNumber);
             if (existingRelease != null)
             {
                 Log.Info("A release with the number " + versionNumber + " already exists.");
                 return false;
             }
 
-            var release = CreateReleaseInOctopus(projectName, versionNumber);
-            octopusRelease.ReleaseCreated(release.Id);
+            var releaseId = CreateReleaseInOctopus(projectName, versionNumber);
+            octopusRelease.ReleaseCreated(releaseId);
             return true;
         }
 
-        private ReleaseResource CreateReleaseInOctopus(string projectName, string versionNumber)
+        private string CreateReleaseInOctopus(string projectName, string versionNumber)
         {
             var project = FindProject(projectName);
-            var releaseTemplate = GetReleaseTemplate(projectName, project);
+            var releaseTemplate = GetReleaseTemplate(project);
 
             Log.Debug("Creating release...");
 
-            var release = _octopusRepository.Releases.Create(new ReleaseResource(versionNumber, project.Id)
+            var releaseId = _octopusFacade.CreateRelease(new ReleaseResource(versionNumber, project.Id)
             {
                 SelectedPackages = releaseTemplate.Packages.Select(x => new SelectedPackage(x.StepName, versionNumber)).ToList()
             });
-            Log.Info("Release " + release.Version + " created successfully!");
-            return release;
+            Log.Info("Release " + releaseId + " created successfully!");
+            return releaseId;
         }
 
-        private ReleaseTemplateResource GetReleaseTemplate(string projectName, ProjectResource project)
+        private ReleaseTemplateResource GetReleaseTemplate(ProjectResource project)
         {
-            Log.Debug("Finding deployment process for project: " + projectName);
-            var deploymentProcess = _octopusRepository.DeploymentProcesses.Get(project.DeploymentProcessId);
-
-            Log.Debug("Finding release template...");
-            var releaseTemplate = _octopusRepository.DeploymentProcesses.GetTemplate(deploymentProcess);
+            var releaseTemplate = _octopusFacade.GetDeploymentProcessesTemplate(project.DeploymentProcessId);
             return releaseTemplate;
         }
 
         private ProjectResource FindProject(string projectName)
         {
             Log.Debug("Finding project: " + projectName);
-            var project = _octopusRepository.Projects.FindByName(projectName);
+            var project = _octopusFacade.FindProjectByName(projectName);
             if (project == null)
             {
                 throw new InvalidOperationException("Could not find a project named: " + projectName);

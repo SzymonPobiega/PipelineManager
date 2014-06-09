@@ -1,15 +1,22 @@
+using System.Collections.Generic;
 using Pipelines;
+using Pipelines.Schema;
 using Pipelines.Schema.Builders;
 using ReleaseManager.Process.NUnit;
 using ReleaseManager.Process.Octopus.Steps;
-using ReleaseManager.Process.TeamCity;
 using ReleaseManager.Process.TeamCity.Steps;
 
-namespace ReleaseManager.Host
+namespace ReleaseManager.StandardProcesses
 {
-    public class StandardProcessTypeResolver : CodeBasedTypeResolver
+    public class StandardProcessSchemaRepository : IPipelineSchemaRepository
     {
-        public StandardProcessTypeResolver()
+        public IEnumerable<PipelineSchema> EnumerableSchemas()
+        {
+            yield return CIUP();
+        }
+
+// ReSharper disable once InconsistentNaming
+        private static PipelineSchema CIUP()
         {
             var builder = new PipelineBuilder("TestProject", 1)
                 .AddStage("Commit", StageTriggerMode.Automatic)
@@ -30,7 +37,7 @@ namespace ReleaseManager.Host
                 .AddActivity()
                 .AddStep<Deploy>().WithParameter("Environment", "PROD")
                 .AddStep<WaitForDeploymentFinish>();
-            RegisterType(x => true, builder.BuildSchema());
+            return builder.BuildSchema();
         }
     }
 }

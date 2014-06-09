@@ -8,6 +8,7 @@ using Pipelines;
 using Pipelines.Autofac;
 using Pipelines.Infrastructure;
 using ReleaseManager.Extensibility;
+using ReleaseManager.StandardProcesses;
 
 namespace ReleaseManager.Host
 {
@@ -34,14 +35,16 @@ namespace ReleaseManager.Host
             appContainerBuilder.RegisterType<QueuedPipelineHost>().AsImplementedInterfaces();
             appContainerBuilder.RegisterApiControllers(typeof (Program).Assembly);
             appContainerBuilder.Register(BuildSessionFactory).SingleInstance();
-            appContainerBuilder.RegisterType<StandardProcessTypeResolver>().As<IPipelineTypeResolver>();
+            appContainerBuilder.RegisterType<StandardProcessSchemaSelector>().AsImplementedInterfaces();
             appContainerBuilder.RegisterType<PipelineFactory>();
 // ReSharper disable once AccessToModifiedClosure
-            appContainerBuilder.Register(context => new AutofacStepFactory(container));
+            appContainerBuilder.Register(context => new AutofacNHibernatePipelineHostFactory(container)).AsImplementedInterfaces();
             appContainerBuilder.RegisterType<NoRetryFailureHandlingStrategy>().AsImplementedInterfaces();
             appContainerBuilder.RegisterType<CommandProcessor>();
             appContainerBuilder.Register(BuildEventDispatcher).SingleInstance();
-
+            appContainerBuilder.RegisterType<PipelineTypeResolver>().AsImplementedInterfaces();
+            appContainerBuilder.RegisterType<StandardProcessSchemaSelector>().AsImplementedInterfaces();
+            appContainerBuilder.RegisterType<StandardProcessSchemaRepository>().AsImplementedInterfaces();
             container = appContainerBuilder.Build();
             return container;
         }
