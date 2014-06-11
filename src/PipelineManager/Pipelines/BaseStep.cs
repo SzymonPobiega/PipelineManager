@@ -1,8 +1,10 @@
-﻿namespace Pipelines
+﻿using System;
+
+namespace Pipelines
 {
     public abstract class BaseStep
     {
-        private readonly UniqueStepId _stepId;
+        private readonly UniqueStepId _stepId;        
 
         protected BaseStep(UniqueStepId stepId)
         {
@@ -14,6 +16,6 @@
             get { return _stepId; }
         }
 
-        public abstract StepExecutionResult Resume(IUnitOfWork unitOfWork, DataContainer optionalData);
+        public abstract StepExecutionResult Resume(IUnitOfWork unitOfWork, DataContainer optionalData, TimeSpan retryTime);
     }
 }

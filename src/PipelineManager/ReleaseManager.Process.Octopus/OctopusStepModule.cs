@@ -13,7 +13,7 @@ namespace ReleaseManager.Process.Octopus
             builder.RegisterType<CreateRelease>();
             builder.RegisterType<Deploy>();
             builder.RegisterType<WaitForDeploymentFinish>();
-            var repo = new OctopusRepository(new OctopusServerEndpoint("http://kn-spobiega-01:8070", "API-9TJC4IMCHVN2J4QU0FVMNVTJQU"));
+            var repo = new OctopusRepository(new OctopusServerEndpoint("http://localhost:8070", "API-9WCGTKESXNXNBFHDZB2DROC28G"));
             builder.RegisterInstance(repo).AsImplementedInterfaces();
             builder.RegisterType<OctopusFacade>().AsImplementedInterfaces();
         }

@@ -66,7 +66,9 @@
     <Compile Include="RetryOnceFailureHandlingStrategy.cs" />
     <Compile Include="StepWithDependencies.cs" />
     <Compile Include="StepWithoutDependencies.cs" />
+    <Compile Include="SuccessAfterRetryStep.cs" />
     <Compile Include="UnitOfWorkTests.cs" />
+    <Compile Include="WaitingForExternalDependencyStep.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

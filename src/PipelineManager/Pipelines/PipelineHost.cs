@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 
 namespace Pipelines
@@ -19,7 +20,7 @@ namespace Pipelines
         {
             IUnitOfWork unitOfWork;
             var pipeline = Load(pipelineId, out unitOfWork) ?? CreateNew(pipelineId, unitOfWork);
-            pipeline.Run(unitOfWork, data);
+            pipeline.Run(unitOfWork, data, DateTime.UtcNow);
             _pipelineRepository.Store(pipelineId, unitOfWork);
         }
         
@@ -28,7 +29,7 @@ namespace Pipelines
             IUnitOfWork unitOfWork;
             var pipeline = Load(pipelineId, out unitOfWork) ?? CreateNew(pipelineId, unitOfWork);
             pipeline.Trigger();
-            pipeline.Run(unitOfWork, null);
+            pipeline.Run(unitOfWork, null, DateTime.UtcNow);
             _pipelineRepository.Store(pipelineId, unitOfWork);
         }
 

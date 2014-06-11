@@ -1,5 +1,9 @@
-﻿using NUnit.Framework;
+﻿using System;
+using System.Activities.Tracking;
+using System.Threading;
+using NUnit.Framework;
 using Pipelines;
+using Pipelines.Events;
 using Pipelines.Schema.Builders;
 
 namespace UnitTests
@@ -21,7 +25,7 @@ namespace UnitTests
                 .AddStepWithoutDependencies(x => secondStepId = x)
                 .Build();
 
-            var result = pipeline.Run(EventSink, null);
+            var result = pipeline.Run(EventSink, null, DateTime.UtcNow);
 
             Assert.AreEqual(StageState.Finished, result);
 
@@ -44,7 +48,7 @@ namespace UnitTests
                 .AddStepWithoutDependencies()
                 .Build();
 
-            var result = pipeline.Run(EventSink, null);
+            var result = pipeline.Run(EventSink, null, DateTime.UtcNow);
 
             Assert.AreEqual(StageState.WaitingForDependency, result);
 
@@ -66,7 +70,7 @@ namespace UnitTests
                 .AddStepWithoutDependencies()
                 .Build();
 
-            var result = pipeline.Run(EventSink, null);
+            var result = pipeline.Run(EventSink, null, DateTime.UtcNow);
 
             Assert.AreEqual(StageState.Failed, result);
 
@@ -91,12 +95,61 @@ namespace UnitTests
                 .AddStepWithoutDependencies()
                 .Build(new RetryOnceFailureHandlingStrategy());
 
-            var result = pipeline.Run(EventSink, null);
+            var result = pipeline.Run(EventSink, null, DateTime.UtcNow);
 
             Assert.AreEqual(StageState.RequestsRetry, result);
 
             Expect(new StepExecutedEvent(firstStepId))
                 .ThenExpect(new StepAttemptFailedEvent(failedStepId))
+                .AndNothingElse();
+        }
+
+        [Test]
+        public void Two_steps_should_execute_correctly_after_failing_once_each()
+        {            
+            UniqueStepId firstRetryStepId = null;
+            UniqueStepId secondRetryStepId = null;
+
+            var pipeline = new PipelineBuilder()
+                .AddStage(StageTriggerMode.Automatic)
+                .AddActivity()                
+                .AddStep<SuccessAfterRetryStep>(id => firstRetryStepId = id)
+                .AddStep<SuccessAfterRetryStep>(id => secondRetryStepId = id)                
+                .Build(new RetryOnceFailureHandlingStrategy());
+
+            pipeline.Run(EventSink, null, DateTime.UtcNow);
+            pipeline.Run(EventSink, null, DateTime.UtcNow);
+            pipeline.Run(EventSink, null, DateTime.UtcNow);
+
+            Expect((new StepAttemptFailedEvent(firstRetryStepId)))
+                .ThenExpect(new StepExecutedEvent(firstRetryStepId))
+                .ThenExpect(new StepAttemptFailedEvent(secondRetryStepId))
+                .ThenExpect(new StepExecutedEvent(secondRetryStepId))
+                .ThenExpectAny<StageFinishedEvent>()
+                .AndNothingElse();
+        }
+
+        [Test]
+        public void Step_should_timeout_after_1_seconds()
+        {
+            UniqueStepId firstRetryStepId = null;
+
+            var pipeline = new PipelineBuilder()
+                .AddStage(StageTriggerMode.Automatic)
+                .AddActivity()
+                .AddStep<WaitingForExternalDependencyStep>(id => firstRetryStepId = id)
+                .Build(new NoRetryFailureHandlingStrategy());
+
+            var startTime = DateTime.UtcNow;
+            var retryTime = startTime + TimeSpan.FromSeconds(5);
+
+            pipeline.Run(EventSink, null, startTime);            
+            pipeline.Run(EventSink, null, retryTime);
+
+            Expect((new StepWaitingForExternalDependencyEvent(firstRetryStepId, startTime)))
+                .ThenExpect(new StepAttemptFailedEvent(firstRetryStepId))
+                .ThenExpect(new StepFailedEvent(firstRetryStepId))
+                .ThenExpectAny<StageFailedEvent>()
                 .AndNothingElse();
         }
 
@@ -111,12 +164,12 @@ namespace UnitTests
                 .AddStepWithoutDependencies()
                 .Build();
 
-            var result = pipeline.Run(EventSink, null);
+            var result = pipeline.Run(EventSink, null, DateTime.UtcNow);
 
             Assert.AreEqual(StageState.Failed, result);
             EventSink.Events.Clear();
 
-            pipeline.Run(EventSink, null);
+            pipeline.Run(EventSink, null, DateTime.UtcNow);
 
             ExpectNothing();
         }
@@ -137,12 +190,12 @@ namespace UnitTests
                 .AddStepWithoutDependencies()
                 .Build();
 
-            var result = pipeline.Run(EventSink, null);
+            var result = pipeline.Run(EventSink, null, DateTime.UtcNow);
 
             Assert.AreEqual(StageState.WaitingForDependency, result);
             EventSink.Events.Clear();
 
-            pipeline.Run(EventSink, null);
+            pipeline.Run(EventSink, null, DateTime.UtcNow);
 
             ExpectNothing();
         }
@@ -160,7 +213,7 @@ namespace UnitTests
                 .AddStepWithoutDependencies()
                 .Build();
 
-            var result = pipeline.Run(EventSink, null);
+            var result = pipeline.Run(EventSink, null, DateTime.UtcNow);
 
             Assert.AreEqual(StageState.OnHold, result);
 
@@ -182,7 +235,7 @@ namespace UnitTests
                 .AddStepWithoutDependencies()
                 .Build();
 
-            var result = pipeline.Run(EventSink, null);
+            var result = pipeline.Run(EventSink, null, DateTime.UtcNow);
 
             Assert.AreEqual(StageState.OnHold, result);
 
@@ -204,13 +257,13 @@ namespace UnitTests
                 .AddStepWithoutDependencies(x => manualStepId = x)
                 .Build();
 
-            var result = pipeline.Run(EventSink, null);
+            var result = pipeline.Run(EventSink, null, DateTime.UtcNow);
 
             Assert.AreEqual(StageState.OnHold, result);
             EventSink.Events.Clear();
 
             pipeline.Trigger();
-            pipeline.Run(EventSink, null);
+            pipeline.Run(EventSink, null, DateTime.UtcNow);
 
             Expect(new StepExecutedEvent(manualStepId))
                 .ThenExpectAny<StageFinishedEvent>()
@@ -231,7 +284,7 @@ namespace UnitTests
                 .AddStepWithoutDependencies(x => secondStepId = x)
                 .Build();
 
-            var result = pipeline.Run(EventSink, null);
+            var result = pipeline.Run(EventSink, null, DateTime.UtcNow);
 
             Assert.AreEqual(StageState.Finished, result);
 
@@ -257,7 +310,7 @@ namespace UnitTests
                 .AddStepWithDependencies()
                 .Build();
 
-            var result = pipeline.Run(EventSink, null);
+            var result = pipeline.Run(EventSink, null, DateTime.UtcNow);
 
             Assert.AreEqual(StageState.WaitingForDependency, result);
 

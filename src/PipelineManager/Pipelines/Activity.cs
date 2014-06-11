@@ -1,4 +1,6 @@
+using System;
 using System.Linq;
+using Pipelines.Events;
 
 namespace Pipelines
 {
@@ -8,6 +10,7 @@ namespace Pipelines
         private readonly BaseStep[] _steps;
         private readonly string _activityId;
         private int _failures;
+        private DateTime? _waitingForExternalDependenciesBeginTime;
         private ActivityState _state = ActivityState.NotStarted;
         private readonly IFailureHandlingStrategy _failureHandlingStrategy;
 
@@ -16,6 +19,7 @@ namespace Pipelines
             _activityId = activityId;
             _failureHandlingStrategy = failureHandlingStrategy;
             _steps = steps;
+            _waitingForExternalDependenciesBeginTime = null;
         }
 
         public string ActivityId
@@ -28,14 +32,16 @@ namespace Pipelines
             get { return _state; }
         }
 
-        public void Resume(IUnitOfWork eventSink, DataContainer optionalData)
+        public void Resume(IUnitOfWork eventSink, DataContainer optionalData, DateTime currentTimeUtc)
         {
             var currentStep = _currentStep;
             foreach (var step in _steps.Skip(currentStep))
             {
-                var result = step.Resume(eventSink, optionalData);
+                var retryTime = currentTimeUtc - _waitingForExternalDependenciesBeginTime ?? TimeSpan.FromSeconds(0);
+                var result = step.Resume(eventSink, optionalData, retryTime);
                 if (result == StepExecutionResult.WaitingForExternalDependency)
                 {
+                    eventSink.On(new StepWaitingForExternalDependencyEvent(step.StepId, currentTimeUtc));
                     break;
                 }
                 if (result == StepExecutionResult.Fail)
@@ -45,7 +51,7 @@ namespace Pipelines
                     {
                         eventSink.On(new StepFailedEvent(step.StepId));
                     }
-                    break;
+                    break;                    
                 }
                 eventSink.On(new StepExecutedEvent(step.StepId));
             }  
@@ -54,10 +60,15 @@ namespace Pipelines
         public void On(StepExecutedEvent evnt)
         {
             _currentStep++;
-
+            _failures = 0;
             _state = _currentStep == _steps.Length
                 ? ActivityState.Finished
                 : ActivityState.WaitingForExternalDependency;
+        }
+
+        public void On(StepWaitingForExternalDependencyEvent evnt)
+        {
+            _waitingForExternalDependenciesBeginTime = _waitingForExternalDependenciesBeginTime ?? evnt.ResumeTimeUtc;
         }
 
         public void On(StepAttemptFailedEvent evnt)
@@ -70,6 +81,6 @@ namespace Pipelines
         {
             _state = ActivityState.Failed;
             _failures++;
-        }
+        }        
     }
 }

@@ -82,6 +82,7 @@
     <Compile Include="Schema\Builders\StepBuilder.cs" />
     <Compile Include="Schema\StepParameter.cs" />
     <Compile Include="StepSchemaValueProvider.cs" />
+    <Compile Include="Events\StepWaitingForExternalDependencyEvent.cs" />
     <Compile Include="UniquePipelineId.cs" />
     <Compile Include="UnitOfWork.cs" />
     <Compile Include="Schema\ActivitySchema.cs" />

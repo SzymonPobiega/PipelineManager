@@ -1,3 +1,4 @@
+using System;
 using Pipelines;
 
 namespace UnitTests
@@ -9,7 +10,7 @@ namespace UnitTests
         {
         }
 
-        public override StepExecutionResult Resume(IUnitOfWork unitOfWork, DataContainer optionalData)
+        public override StepExecutionResult Resume(IUnitOfWork unitOfWork, DataContainer optionalData, TimeSpan retryTime)
         {
             return StepExecutionResult.Finished;
         }

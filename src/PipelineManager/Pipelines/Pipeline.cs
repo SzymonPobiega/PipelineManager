@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Pipelines.Events;
 
 namespace Pipelines
 {
@@ -22,13 +23,13 @@ namespace Pipelines
             get { return _pipelineId; }
         }
 
-        public StageState Run(IUnitOfWork unitOfWork, object optionalData)
+        public StageState Run(IUnitOfWork unitOfWork, object optionalData, DateTime currentTimeUtc)
         {
             var dataContainer = new DataContainer(optionalData);
             var publisherWrapper = new CompositeEventSink(unitOfWork, new DynamicEventSink(this));
             return _stages
                 .Skip(_currentStage)
-                .Select(step => step.Resume(publisherWrapper, dataContainer))
+                .Select(step => step.Resume(publisherWrapper, dataContainer, currentTimeUtc))
                 .FirstOrDefault(result => result != StageState.Finished);
         }
 
@@ -42,7 +43,13 @@ namespace Pipelines
             var stage = _stages.First(x => x.StageId == evnt.StepId.StageId);
             stage.On(evnt);
         }
-        
+
+        public void On(StepWaitingForExternalDependencyEvent evnt)
+        {
+            var stage = _stages.First(x => x.StageId == evnt.StepId.StageId);
+            stage.On(evnt);
+        }
+
         public void On(StepFailedEvent evnt)
         {
             var stage = _stages.First(x => x.StageId == evnt.StepId.StageId);

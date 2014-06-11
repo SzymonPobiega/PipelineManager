@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Pipelines.Events;
 
 namespace Pipelines
 {
@@ -23,7 +24,7 @@ namespace Pipelines
             get { return _stageId.StageId; }
         }
 
-        public StageState Resume(IUnitOfWork eventSink, DataContainer optionalData)
+        public StageState Resume(IUnitOfWork eventSink, DataContainer optionalData, DateTime currentTimeUtc)
         {
             if (_state == StageState.OnHold || _state == StageState.Failed)
             {
@@ -31,7 +32,7 @@ namespace Pipelines
             }
             foreach (var activity in _activities)
             {
-                activity.Resume(eventSink, optionalData);
+                activity.Resume(eventSink, optionalData, currentTimeUtc);
             }
 
             if (_activities.All(x => x.State == ActivityState.Finished))
@@ -55,6 +56,14 @@ namespace Pipelines
         }
 
         public void On(StepExecutedEvent evnt)
+        {
+            var activity = _activities.First(x => x.ActivityId == evnt.StepId.ActivityId);
+            activity.On(evnt);
+
+            UpdateState();
+        }
+
+        public void On(StepWaitingForExternalDependencyEvent evnt)
         {
             var activity = _activities.First(x => x.ActivityId == evnt.StepId.ActivityId);
             activity.On(evnt);
