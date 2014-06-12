@@ -44,9 +44,9 @@ namespace Pipelines.Infrastructure
             get { return _session; }
         }
 
-        public void EnqueueCommand(object command)
+        public void EnqueueCommand(object command, DateTime executeAfter)
         {
-            CommandQueue.Enqueue(command, _session);
+            CommandQueue.Enqueue(command, _session, executeAfter);
         }
     }
 }

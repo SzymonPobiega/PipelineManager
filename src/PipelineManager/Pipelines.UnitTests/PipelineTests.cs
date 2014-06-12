@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Activities.Tracking;
 using System.Threading;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using Pipelines;
 using Pipelines.Events;
@@ -11,7 +12,6 @@ namespace UnitTests
     [TestFixture]
     public class PipelineTests : EventDriventTest
     {
-
         [Test]
         public void Pipeline_without_external_dependencies_runs_all_steps_till_completion()
         {
@@ -130,7 +130,7 @@ namespace UnitTests
         }
 
         [Test]
-        public void Step_should_timeout_after_1_seconds()
+        public void Step_should_timeout_after_500_seconds()
         {
             UniqueStepId firstRetryStepId = null;
 
@@ -141,12 +141,39 @@ namespace UnitTests
                 .Build(new NoRetryFailureHandlingStrategy());
 
             var startTime = DateTime.UtcNow;
-            var retryTime = startTime + TimeSpan.FromSeconds(5);
+            var retryTime = startTime + TimeSpan.FromSeconds(501);
 
             pipeline.Run(EventSink, null, startTime);            
             pipeline.Run(EventSink, null, retryTime);
 
             Expect((new StepWaitingForExternalDependencyEvent(firstRetryStepId, startTime)))
+                .ThenExpect(new StepAttemptFailedEvent(firstRetryStepId))
+                .ThenExpect(new StepFailedEvent(firstRetryStepId))
+                .ThenExpectAny<StageFailedEvent>()
+                .AndNothingElse();
+        }
+
+        [Test]
+        public void Step_should_retry_after_30_seconds()
+        {
+            UniqueStepId firstRetryStepId = null;
+
+            var pipeline = new PipelineBuilder()
+                .AddStage(StageTriggerMode.Automatic)
+                .AddActivity()
+                .AddStep<RetryWaitingForExternalDependencyStep>(id => firstRetryStepId = id)
+                .Build(new NoRetryFailureHandlingStrategy());
+
+            var startTime = DateTime.UtcNow;            
+            var retryTime = startTime + TimeSpan.FromSeconds(30);
+            var timeoutTime = startTime + TimeSpan.FromSeconds(501);
+
+            pipeline.Run(EventSink, null, startTime);
+            pipeline.Run(EventSink, null, retryTime);
+            pipeline.Run(EventSink, null, timeoutTime);
+
+            Expect((new StepWaitingForExternalDependencyEvent(firstRetryStepId, startTime)))
+                .ThenExpect(new StepWaitingForExternalDependencyEvent(firstRetryStepId, retryTime))
                 .ThenExpect(new StepAttemptFailedEvent(firstRetryStepId))
                 .ThenExpect(new StepFailedEvent(firstRetryStepId))
                 .ThenExpectAny<StageFailedEvent>()
@@ -320,5 +347,21 @@ namespace UnitTests
         }
 
        
+    }
+
+    public class RetryWaitingForExternalDependencyStep : BaseStep
+    {
+        public RetryWaitingForExternalDependencyStep(UniqueStepId stepId) : base(stepId)
+        {
+        }
+
+        public override StepExecutionResult Resume(IUnitOfWork unitOfWork, DataContainer optionalData, TimeSpan retryTime)
+        {
+            if (retryTime > TimeSpan.FromSeconds(500))
+            {
+                return StepExecutionResult.Fail;
+            }
+            return StepExecutionResult.WaitingForExternalDependency;          
+        }
     }
 }

@@ -22,12 +22,12 @@ namespace Pipelines.Infrastructure.UnitTests
             using (var session = SessionFactory.OpenSession())
             using (var tx = session.BeginTransaction())
             {
-                CommandQueue.Enqueue(new TestCommand(unique), session);
+                CommandQueue.Enqueue(new TestCommand(unique), session, DateTime.UtcNow);
                 tx.Commit();
             }
 
             var lastProcessed = sut.GetLastProcessed();
-            var command = (TestCommand)sut.Dequeue(lastProcessed, 1).First().Payload;
+            var command = (TestCommand)sut.Dequeue(1).First().Payload;
 
             Assert.AreEqual(unique, command.SomeUniqueProperty);
         }
@@ -47,7 +47,7 @@ namespace Pipelines.Infrastructure.UnitTests
             Enqueue(secondUnique);
 
             var lastProcessed = sut.GetLastProcessed();
-            var uniques = sut.Dequeue(lastProcessed, 2).Select(x => x.Payload).Cast<TestCommand>().Select(x => x.SomeUniqueProperty).ToList();
+            var uniques = sut.Dequeue(2).Select(x => x.Payload).Cast<TestCommand>().Select(x => x.SomeUniqueProperty).ToList();
 
             CollectionAssert.AreEqual(new[]{firstUnique, secondUnique}, uniques);
         }
@@ -57,7 +57,7 @@ namespace Pipelines.Infrastructure.UnitTests
             using (var session = SessionFactory.OpenSession())
             using (var tx = session.BeginTransaction())
             {
-                CommandQueue.Enqueue(new TestCommand(unique), session);
+                CommandQueue.Enqueue(new TestCommand(unique), session, DateTime.UtcNow);
                 tx.Commit();
             }
         }
@@ -87,7 +87,7 @@ namespace Pipelines.Infrastructure.UnitTests
             const int lastProcessedCommand = 15;
             var sut = new CommandQueue(SessionFactory);
 
-            var outstandingCommands = sut.Dequeue(lastProcessedCommand, 1);
+            var outstandingCommands = sut.Dequeue(1);
 
             Assert.IsFalse(outstandingCommands.Any());
         }

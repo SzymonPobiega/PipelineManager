@@ -28,7 +28,8 @@ namespace Pipelines.Infrastructure.Records
         public virtual object DeserializePayload()
         {
             var payloadType = Type.GetType(PayloadTypeName, true);
-            return JsonConvert.DeserializeObject(PayloadJson, payloadType);
+            object deserializePayload = JsonConvert.DeserializeObject(PayloadJson, payloadType);
+            return deserializePayload;
         }
 
         protected EventRecord()

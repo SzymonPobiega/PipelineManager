@@ -12,6 +12,7 @@ namespace Pipelines.Infrastructure.UnitTests
         [Test]
         public void It_can_serialize_and_deserialize_payload_with_private_readonly_fields()
         {
+            var executeAfter = DateTime.UtcNow;
             var fixture = new Fixture();
             var encapsulatedValue = fixture.Create<string>();
             var enqueueDate = fixture.Create<DateTime>();
@@ -21,7 +22,7 @@ namespace Pipelines.Infrastructure.UnitTests
                 SomeValue = encapsulatedValue
             });
 
-            var record = new CommandRecord(payload, enqueueDate);
+            var record = new CommandRecord(payload, enqueueDate, executeAfter);
 
             var deserializedPayload = (TestCommand)record.DeserializePayload();
 

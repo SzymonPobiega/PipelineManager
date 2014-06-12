@@ -5,7 +5,7 @@ namespace UnitTests
 {
     public class WaitingForExternalDependencyStep : BaseStep
     {
-        private readonly TimeSpan _timeout = TimeSpan.FromSeconds(1);
+        private readonly TimeSpan _timeout = TimeSpan.FromSeconds(500);
 
         public WaitingForExternalDependencyStep(UniqueStepId stepId)
             : base(stepId)

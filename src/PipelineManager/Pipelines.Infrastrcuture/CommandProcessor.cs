@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using JetBrains.Annotations;
 using NHibernate;
+using Pipelines.Infrastructure.Records;
 
 namespace Pipelines.Infrastructure
 {
@@ -31,12 +32,12 @@ namespace Pipelines.Infrastructure
             {
                 try
                 {
-                    var lastProcessedCommand = _commandQueue.GetLastProcessed();
-                    var commandStream = DequeueCommands(lastProcessedCommand)
+                    //var lastProcessedCommand = _commandQueue.GetLastProcessed();
+                    var commandStream = DequeueCommands()
                         .TakeWhile(_ => !token.IsCancellationRequested);
 
                     foreach (var command in commandStream)
-                    {
+                    {                                            
                         Process(command);
                     }
                 }
@@ -51,25 +52,33 @@ namespace Pipelines.Infrastructure
         private void Process(CommandEnvelope commandEnvelope)
         {
             using (var session = _sessionFactory.OpenSession())
-            using (var tx = session.BeginTransaction())
             {
-                var host = _hostFactory.Create(session);
-                commandEnvelope.Payload.Execute(host);
-                _hostFactory.Release(host);
-                CommandQueue.MarkProcessed(commandEnvelope.Sequence, session);
-                tx.Commit();
+                var executeAfterDate = session.Get<CommandRecord>(commandEnvelope.Sequence).ExecuteAfterDate;
+                if (DateTime.UtcNow > executeAfterDate)
+                {
+
+                    using (var tx = session.BeginTransaction())
+                    {
+                        var host = _hostFactory.Create(session);
+                        commandEnvelope.Payload.Execute(host);
+                        _hostFactory.Release(host);
+                        CommandQueue.MarkProcessed(commandEnvelope.Sequence, session);
+
+                        tx.Commit();
+                    }
+                }
             }
         }
 
-        private IEnumerable<CommandEnvelope> DequeueCommands(int lastProcessedCommand)
+        private IEnumerable<CommandEnvelope> DequeueCommands()
         {
             while (true)
             {
-                var unprocessedCommands = _commandQueue.Dequeue(lastProcessedCommand, 10);
+                var unprocessedCommands = _commandQueue.Dequeue(10);
                 foreach (var command in unprocessedCommands)
                 {
                     yield return command;
-                    lastProcessedCommand = command.Sequence;
+                    //lastProcessedCommand = command.Sequence;
                 }
             }
 // ReSharper disable once FunctionNeverReturns

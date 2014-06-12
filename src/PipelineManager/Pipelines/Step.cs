@@ -5,7 +5,7 @@ namespace Pipelines
     public abstract class Step<T> : BaseStep
         where T : class 
     {
-        private readonly TimeSpan _timeout = TimeSpan.FromSeconds(1);
+        private readonly TimeSpan _timeout = TimeSpan.FromSeconds(300);
 
         protected Step(UniqueStepId stepId) : base(stepId)
         {

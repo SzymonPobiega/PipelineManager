@@ -69,6 +69,7 @@
     <Compile Include="ReadModels\ReleaseCandidate.cs" />
     <Compile Include="ReadModels\TestSuite.cs" />
     <Compile Include="ReadModels\TestCase.cs" />
+    <Compile Include="WaitingForExternalDependencyTrigger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -5,13 +5,13 @@ namespace Pipelines.Events
     public class StepWaitingForExternalDependencyEvent
     {
         private readonly UniqueStepId _stepId;
-        private DateTime? _resumeTimeUtc;
+        private readonly DateTime _resumeTimeUtc;
 
-        public StepWaitingForExternalDependencyEvent(UniqueStepId stepId, DateTime currentTimeUtc)
+        public StepWaitingForExternalDependencyEvent(UniqueStepId stepId, DateTime resumeTimeUtc)
         {
-            if (stepId == null) throw new ArgumentNullException("stepId");
+            if (stepId == null) throw new ArgumentNullException("stepId");            
             _stepId = stepId;
-            _resumeTimeUtc = currentTimeUtc;
+            _resumeTimeUtc = resumeTimeUtc;
         }
 
         public UniqueStepId StepId
@@ -19,7 +19,7 @@ namespace Pipelines.Events
             get { return _stepId; }
         }
 
-        public DateTime? ResumeTimeUtc {
+        public DateTime ResumeTimeUtc {
             get { return _resumeTimeUtc; }
         }
 

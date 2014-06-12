@@ -17,6 +17,7 @@ namespace ReleaseManager.DataAccess
             builder.RegisterType<EnvironmentReadModel>().AsImplementedInterfaces();
             builder.RegisterType<ThrottledStageTrigger>().AsImplementedInterfaces();
             builder.RegisterType<CoreMappingProvider>().AsImplementedInterfaces();
+            builder.RegisterType<WaitingForExternalDependencyTrigger>().AsImplementedInterfaces();
         }
     }
 

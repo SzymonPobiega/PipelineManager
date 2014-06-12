@@ -18,7 +18,7 @@ namespace Pipelines.Infrastructure
             using (var tx = session.BeginTransaction())
             {
                 var command = new ActivateCommand(pipelineId, data);
-                CommandQueue.Enqueue(command, session);
+                CommandQueue.Enqueue(command, session, DateTime.UtcNow);
                 tx.Commit();
             }
         }
@@ -28,7 +28,7 @@ namespace Pipelines.Infrastructure
             using (var session = _sessionFactory.OpenSession())
             using (var tx = session.BeginTransaction())
             {
-                CommandQueue.Enqueue(new TriggerCommand(pipelineId), session);
+                CommandQueue.Enqueue(new TriggerCommand(pipelineId), session, DateTime.UtcNow);
                 tx.Commit();
             }
         }

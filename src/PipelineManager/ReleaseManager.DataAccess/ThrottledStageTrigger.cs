@@ -29,7 +29,7 @@ namespace ReleaseManager.DataAccess
                 if (nextStage.TriggerMode == StageTriggerMode.Throttled && !nextStage.Busy)
                 {
                     nextStage.Lock();
-                    evnt.EnqueueCommand(new TriggerCommand(evnt.PipelineId));
+                    evnt.EnqueueCommand(new TriggerCommand(evnt.PipelineId), DateTime.UtcNow);
                 }
             }
         }
