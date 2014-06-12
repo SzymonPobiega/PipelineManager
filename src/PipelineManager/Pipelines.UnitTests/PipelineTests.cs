@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Activities.Tracking;
 using System.Threading;
-using Newtonsoft.Json;
 using NUnit.Framework;
 using Pipelines;
 using Pipelines.Events;
@@ -39,20 +37,24 @@ namespace UnitTests
         public void Pipeline_execution_stops_on_first_step_with_external_dependency()
         {
             UniqueStepId firstStepId = null;
+            UniqueStepId secondStepId = null;
 
             var pipeline = new PipelineBuilder()
                 .AddStage(StageTriggerMode.Automatic)
                 .AddActivity()
                 .AddStepWithoutDependencies(x => firstStepId = x)
-                .AddStepWithDependencies()
+                .AddStepWithDependencies(x => secondStepId = x)
                 .AddStepWithoutDependencies()
                 .Build();
 
-            var result = pipeline.Run(EventSink, null, DateTime.UtcNow);
+            var startTime = DateTime.UtcNow;
+
+            var result = pipeline.Run(EventSink, null, startTime);
 
             Assert.AreEqual(StageState.WaitingForDependency, result);
 
             Expect(new StepExecutedEvent(firstStepId))
+                .ThenExpect(new StepWaitingForExternalDependencyEvent(secondStepId, startTime))
                  .AndNothingElse();
         }
 
@@ -204,6 +206,9 @@ namespace UnitTests
         [Test]
         public void Running_multi_stage_multi_activity_pipeline_that_waits_for_external_dependency_does_nothing()
         {
+            var startTime = DateTime.UtcNow;  
+            UniqueStepId firstStepId = null;
+
             var pipeline = new PipelineBuilder()
                 .AddStage(StageTriggerMode.Automatic)
                 .AddActivity()
@@ -211,20 +216,21 @@ namespace UnitTests
                 .AddStage(StageTriggerMode.Automatic)
                 .AddActivity()
                 .AddStepWithoutDependencies()
-                .AddStepWithDependencies()
+                .AddStepWithDependencies(x => firstStepId = x)
                 .AddStepWithoutDependencies()
                 .AddActivity()
                 .AddStepWithoutDependencies()
                 .Build();
+            
 
-            var result = pipeline.Run(EventSink, null, DateTime.UtcNow);
+            var result = pipeline.Run(EventSink, null, startTime);
 
             Assert.AreEqual(StageState.WaitingForDependency, result);
             EventSink.Events.Clear();
 
             pipeline.Run(EventSink, null, DateTime.UtcNow);
 
-            ExpectNothing();
+            Expect(new StepWaitingForExternalDependencyEvent(firstStepId, startTime));
         }
 
         [Test]
@@ -327,22 +333,29 @@ namespace UnitTests
         {
             UniqueStepId firstStepId = null;
             UniqueStepId secondStepId = null;
+            UniqueStepId firstStepWithDependencyId = null;
+            UniqueStepId secondStepWithDependencyId = null;
+
+            var startTime = DateTime.UtcNow;   
+
             var pipeline = new PipelineBuilder()
                 .AddStage(StageTriggerMode.Automatic)
                 .AddActivity()
                 .AddStepWithoutDependencies(x => firstStepId = x)
-                .AddStepWithDependencies()
+                .AddStepWithDependencies(x => firstStepWithDependencyId = x)
                 .AddActivity()
                 .AddStepWithoutDependencies(x => secondStepId = x)
-                .AddStepWithDependencies()
+                .AddStepWithDependencies(x => secondStepWithDependencyId = x)
                 .Build();
 
-            var result = pipeline.Run(EventSink, null, DateTime.UtcNow);
+            var result = pipeline.Run(EventSink, null, startTime);
 
             Assert.AreEqual(StageState.WaitingForDependency, result);
 
             Expect(new StepExecutedEvent(firstStepId))
+                .ThenExpect(new StepWaitingForExternalDependencyEvent(firstStepWithDependencyId, startTime))
                 .ThenExpect(new StepExecutedEvent(secondStepId))
+                .ThenExpect(new StepWaitingForExternalDependencyEvent(secondStepWithDependencyId, startTime))
                 .AndNothingElse();
         }
 
