@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
@@ -12,7 +15,7 @@ namespace ReleaseManager.Host
 // ReSharper disable once UnusedParameter.Local
         static void Main(string[] args)
         {
-            const string baseAddress = "http://localhost:9000/";
+            const string localhostAddress = "http://localhost:9000/";
 
             var tokenSource = new CancellationTokenSource();
 
@@ -20,9 +23,19 @@ namespace ReleaseManager.Host
             var commandProcessor = container.Resolve<CommandProcessor>();
             Task.Factory.StartNew(() => commandProcessor.BeginProcessing(tokenSource.Token), tokenSource.Token);
 
-            using (WebApp.Start(baseAddress, x => WebServerSetup.ConfigureWebServer(x, container)))
+            var options = new StartOptions();
+            options.Urls.Add(localhostAddress);
+
+            var firstIPAddress =
+                Dns.GetHostEntry(Dns.GetHostName())
+                    .AddressList.FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork)
+                    .ToString();
+
+            options.Urls.Add(localhostAddress.Replace("localhost",firstIPAddress));
+
+            using (WebApp.Start(options, x => WebServerSetup.ConfigureWebServer(x, container)))
             {
-                System.Diagnostics.Process.Start(baseAddress);
+                System.Diagnostics.Process.Start(localhostAddress);
                 Console.WriteLine("Press <enter> to exit");
                 Console.ReadLine(); 
             }
